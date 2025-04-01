@@ -1,0 +1,5 @@
+vpc_id: vpc-0abcdef1234561234
+cert_arn: arn:aws:acm:ap-southeast-2:111122223333:certificate/certificate_ID
+custom_ami_id: ami-123example456
+private_subnets: [ "10.130.10.0/26", "10.130.10.64/26", "10.130.10.128/26" ]
+logs_bucket: prod-log-bucket-1234567
