@@ -72,6 +72,14 @@ resource "aws_security_group" "nginx_sg" {
     security_groups = [aws_security_group.alb_sg.id]
   }
 
+  # Allow SSH access from 10.0.0.0/8 (Private Network)
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/8"]  # Restricts SSH access to private network
+  }
+
   egress {
     from_port   = 0
     to_port     = 0

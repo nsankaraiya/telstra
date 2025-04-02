@@ -87,3 +87,4 @@ This pipeline will deploy and ALB in public subnet which is setup with Auto Scal
 8. Enable network firewall
 9. Setup custom DNS 
 10. Enable WAF for inbound requests
+11. Access to SSH port directly using ssh key should be disabled and access provided only via approved interface and using short lived credentials provided by software like CyberArk
