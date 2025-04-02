@@ -37,6 +37,9 @@ Using Jenkins and the Jenkins pipeline script create a pipeline that will deploy
 Contains Terraform modules and configurations for deploying application-related resources.
 This pipeline will deploy and ALB in public subnet which is setup with Auto Scaling Group to connect to NGINIX application in the backend EC2 instance
 
+## Branches
+1. nonprod (default)
+2. prod (Golden Copy)
 
 ## Deployment
 ### Using Jenkins
@@ -72,5 +75,15 @@ This pipeline will deploy and ALB in public subnet which is setup with Auto Scal
 6. Sustainability (Not Required for this implementation as we do not have lot of archiving of data)
   
 
+## Future Improvement
 
-
+1. Create custom AMI with all apllications installed and avoid Launch configuration
+2. Terraform module can be stored in separate repository and tagged so that appropriate versions can be fetched
+3. Test the site accessibility after deployment
+4. Create modules for app_infra resources
+5. IaM roles refinement
+6. NACL Rules refinement
+7. Use proxy server for all outbound communication
+8. Enable network firewall
+9. Setup custom DNS 
+10. Enable WAF for inbound requests
