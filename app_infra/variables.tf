@@ -3,22 +3,22 @@ variable "vpc_id" {}
 
 variable "branch" {
   description = "Name of the branch passed from Pipeline"
-  type = string
+  type        = string
 }
 
 variable "appname" {
   description = "Application Name"
-  type = string
+  type        = string
 }
 
 variable "cert_arn" {
   description = "ARN of SSL Certificate for ALB"
-  type = string
+  type        = string
 }
 
 variable "logs_bucket" {
   description = "Name of Logging S3 bucket"
-  type = string
+  type        = string
 }
 
 # EC2 Instance Variables
@@ -51,6 +51,6 @@ variable "desired_capacity" {
 variable "instance_type" {
   description = "Instance Type for Compute Engine"
   type        = string
-  default   =  "t2.large"
+  default     = "t2.large"
 }
 

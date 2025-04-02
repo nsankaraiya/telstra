@@ -3,19 +3,19 @@
 # Do not use the default VPC and ensure that it is deleted from your account
 
 resource "aws_vpc" "this" {
-  cidr_block = var.vpc_cidr
-  enable_dns_support = true   # Enable DNS support
+  cidr_block           = var.vpc_cidr
+  enable_dns_support   = true # Enable DNS support
   enable_dns_hostnames = true # Enable DNS hostnames for instances
-  tags = local.vpc_tags
+  tags                 = local.vpc_tags
 }
 
 # Create Public Subnet
 resource "aws_subnet" "private" {
   count = 3
 
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = cidrsubnet(var.public_subnet_cidr, 2, count.index)
-  availability_zone = element(["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"], count.index)
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = cidrsubnet(var.public_subnet_cidr, 2, count.index)
+  availability_zone       = element(["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"], count.index)
   map_public_ip_on_launch = true
   tags = {
     Name = "public-subnet-${count.index}"
@@ -40,9 +40,9 @@ resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 
   tags = merge(
-      var.tags, 
-      {Name = "Internet Gateway"}
-    )
+    var.tags,
+    { Name = "Internet Gateway" }
+  )
 }
 
 
@@ -56,9 +56,9 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = merge(
-      var.tags,
-      { Name = "Public Route Table" }
-    )
+    var.tags,
+    { Name = "Public Route Table" }
+  )
 }
 
 # Route Table Associations for Public Subnet
@@ -83,9 +83,9 @@ resource "aws_nat_gateway" "this" {
   subnet_id     = aws_subnet.public.id
 
   tags = merge(
-      var.tags,
-      { Name = "NAT Gateway" }
-    )
+    var.tags,
+    { Name = "NAT Gateway" }
+  )
 }
 
 resource "aws_eip" "nat" {
@@ -101,8 +101,8 @@ resource "aws_route_table" "private_route_table" {
   }
 
   tags = merge(
-      var.tags,
-      { Name = "Private Route Table" }
-    )
+    var.tags,
+    { Name = "Private Route Table" }
+  )
 }
 

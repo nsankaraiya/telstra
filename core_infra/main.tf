@@ -27,8 +27,8 @@ module "vpc_subnets" {
 module "logs_bucket" {
   source = "./modules/s3bucket"
 
-  bucket = join("-", [var.appname, local.account_id, "logging"])
-  kms_master_key_id = "alias/s3"
+  bucket                  = join("-", [var.appname, local.account_id, "logging"])
+  kms_master_key_id       = "alias/s3"
   bucket_lifecycle_status = true
 
   tags = var.coretags
@@ -37,7 +37,7 @@ module "logs_bucket" {
 module "artifacts_bucket" {
   source = "./modules/s3bucket"
 
-  bucket = join("-", [var.appname, local.account_id, "artifacts"])
+  bucket            = join("-", [var.appname, local.account_id, "artifacts"])
   kms_master_key_id = "alias/s3"
 
   bucket_versioning_status = true
@@ -46,20 +46,20 @@ module "artifacts_bucket" {
 }
 
 module "s3_kms_key" {
-  source = "./modules/kms"
-  tags = var.coretags
+  source         = "./modules/kms"
+  tags           = var.coretags
   is_key_enabled = true
-  name = "alias/s3"
+  name           = "alias/s3"
 }
 
 
 # Create a VPC Endpoint for S3
 resource "aws_vpc_endpoint" "s3" {
-  vpc_id             = module.vpc_subnets.vpc_id
-  service_name       = "com.amazonaws.ap-southeast-2.s3"  
-  route_table_ids    = [module.vpc_subnets.public_route_table, module.vpc_subnets.private_route_table]
-  vpc_endpoint_type  = "Gateway"
-  policy             = jsonencode({
+  vpc_id            = module.vpc_subnets.vpc_id
+  service_name      = "com.amazonaws.ap-southeast-2.s3"
+  route_table_ids   = [module.vpc_subnets.public_route_table, module.vpc_subnets.private_route_table]
+  vpc_endpoint_type = "Gateway"
+  policy = jsonencode({
     Statement = [
       {
         Effect   = "Allow"

@@ -1,7 +1,7 @@
 # Create ALB in Public Subnet
 
 resource "aws_security_group" "alb_sg" {
-  name        = join ("-", [ var.branch, var.appname, "ALB_sg" ])
+  name        = join("-", [var.branch, var.appname, "ALB_sg"])
   description = "Security group for NGINX server"
   vpc_id      = aws_vpc.main.id
 
@@ -21,11 +21,11 @@ resource "aws_security_group" "alb_sg" {
 }
 
 resource "aws_lb" "main" {
-  name               = "my-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [aws_subnet.public.id]
+  name                       = "my-alb"
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.alb_sg.id]
+  subnets                    = [aws_subnet.public.id]
   enable_deletion_protection = true
   access_logs {
     bucket  = var.logs_bucket
@@ -38,7 +38,7 @@ resource "aws_lb" "main" {
 
 resource "aws_lb_target_group" "nginx" {
   name     = "nginx-target-group"
-  port     = 80  
+  port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id
 }
@@ -48,7 +48,7 @@ resource "aws_lb_listener" "https" {
   port              = 443
   protocol          = "HTTPS"
 
-  certificate_arn = var.cert_arn  
+  certificate_arn = var.cert_arn
 
   default_action {
     type             = "forward"
@@ -61,14 +61,14 @@ resource "aws_lb_listener" "https" {
 # The protocol can be changed to HTTPS to provide end-to-end encryption
 
 resource "aws_security_group" "nginx_sg" {
-  name        = join ("-", [ var.branch, var.appname, "nginx_sg" ])
+  name        = join("-", [var.branch, var.appname, "nginx_sg"])
   description = "Security group for NGINX server"
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
   }
 
@@ -77,7 +77,7 @@ resource "aws_security_group" "nginx_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/8"]  # Restricts SSH access to private network
+    cidr_blocks = ["10.0.0.0/8"] # Restricts SSH access to private network
   }
 
   egress {
@@ -89,13 +89,13 @@ resource "aws_security_group" "nginx_sg" {
 }
 
 resource "aws_launch_configuration" "nginx" {
-  name          = "nginx-launch-configuration"
-  image_id      = var.custom_ami_id  # Use custom AMI ID
-  instance_type = var.instance_type
-  key_name      = "your-ssh-key"  # Replace with your SSH key name
-  security_groups = [aws_security_group.nginx_sg.name]
+  name                 = "nginx-launch-configuration"
+  image_id             = var.custom_ami_id # Use custom AMI ID
+  instance_type        = var.instance_type
+  key_name             = "your-ssh-key" # Replace with your SSH key name
+  security_groups      = [aws_security_group.nginx_sg.name]
   iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
-  
+
   user_data = <<-EOF
               #!/bin/bash
               sudo yum update -y
@@ -167,7 +167,7 @@ EOF
 resource "aws_iam_policy" "ec2_cloudwatch_s3_policy" {
   name        = "EC2CloudWatchS3Policy"
   description = "Policy for EC2 to write logs to CloudWatch and access S3"
-  
+
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -216,16 +216,16 @@ resource "aws_autoscaling_group" "nginx_asg" {
   max_size             = var.max_size
   launch_configuration = aws_launch_configuration.nginx.id
   vpc_zone_identifier  = local.private_subnets
-  
+
   health_check_type         = "EC2"
   health_check_grace_period = 300
 
-  force_delete             = true
+  force_delete = true
 
   mixed_instances_policy {
     instances_distribution {
-      on_demand_base_capacity                  = 1  # Ensure at least 1 On-Demand instance
-      on_demand_percentage_above_base_capacity = 30 # 30% On-Demand, 70% Spot
+      on_demand_base_capacity                  = 1                    # Ensure at least 1 On-Demand instance
+      on_demand_percentage_above_base_capacity = 30                   # 30% On-Demand, 70% Spot
       spot_allocation_strategy                 = "capacity-optimized" # Optimize for available Spot capacity
     }
 
@@ -236,7 +236,7 @@ resource "aws_autoscaling_group" "nginx_asg" {
       }
     }
   }
-  
+
   target_group_arns = [aws_lb_target_group.nginx.arn]
 
   lifecycle {
