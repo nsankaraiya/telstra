@@ -5,7 +5,7 @@ locals {
   )
   mandatory_bucket_policy_statement = [
     {
-      Sid = "AllowSSLRequestsOnly"
+      Sid    = "AllowSSLRequestsOnly"
       Action = "s3:*"
       Effect = "Deny"
       Resource = [
@@ -16,11 +16,11 @@ locals {
         Bool = {
           "aws:SecureTransport" = "false"
         }
-      }, 
+      },
       Principal = "*"
-    }, 
+    },
     {
-      Sid = "AllowTLSRequestsOnly"
+      Sid    = "AllowTLSRequestsOnly"
       Action = "s3:*"
       Effect = "Deny"
       Resource = [
@@ -31,7 +31,7 @@ locals {
         NumericLessThan = {
           "s3:TlsVersion" = 1.2
         }
-      }, 
+      },
       Principal = "*"
     }
   ]
